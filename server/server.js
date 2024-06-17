@@ -43,22 +43,17 @@ app.get( '/partlist/:stateCode/:districtCode/:acNumber', async (req, res, next)=
 });
 
 app.post('/downloadPdf/:state_name/:district_name/:ac_name/:part_name', async (req, res, next)=> {
-  console.log(req.body);
   let file = await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body)
-  
-  console.log(file.data);
-  // let pdfFile = atob(file.data.content)
-  console.log(req.params.state_name);
-  let path = "D:/WORKSPACE/DEB_WORKSPACE/Miscellaneous/PDFs/"+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"
-  let fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
-  // store(pdfFile,path,fileName)
-  fs.writeFileSync(path+fileName,file.data.content,'base64');
 
-  if(file.status === 200){
+  let pdfContent = file.data.content;
+
+  //TODO: savePDF Content Function
+
+  //TODO: Return Error if API Fails or File Save fails
+  if(file.status === 200)
     res.json({data: "Successfully Downloaded", error: null});
-  } else {
+  else
     res.json({data: "Error Downloading", error: null});
-  }
 
 })
 

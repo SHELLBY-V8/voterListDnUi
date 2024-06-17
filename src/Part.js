@@ -6,6 +6,7 @@ import { GetAc, GetCaptcha, GetDistrict, GetPart, GetStates, PdfDownload } from 
 function Part() {
 
   let [partList, setPartList] = useState({});
+  let [curPartList, setCurPartList] = useState({});
   let [captcha, setCaptcha] = useState({});
   let [refesh, setRefresh] = useState(true);
   let [data, setData] = useState({})
@@ -16,23 +17,12 @@ function Part() {
   let stateName= (JSON.parse(localStorage.getItem("states"))?.filter((e) => {return e.stateCd == state}))[0]?.stateName
   let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.asmblyName
   let acName =(JSON.parse(localStorage.getItem("constituencies"))?.filter((e) => {return e.asmblyNo == acNum}))[0]?.asmblyName
-  let partName = "";
-  let partCode = "";
-  let part = {};
   let curIndex = localStorage.getItem("index");
   
   
   useEffect(() => {
-    GetPart(state,district,acNum,setPartList);
+    GetPart(state,district,acNum,setPartList,setCurPartList, curIndex);
   }, []);
-
-  useEffect(()=>{
-    let partListJ = JSON.parse(localStorage.getItem("partList"))
-    part = partListJ && Object.entries(partListJ)[curIndex][1]//partList.filter((ele, i)=>{i==curIndex});
-    console.log(part)
-    partName = part.partName;
-    partCode = part.partNumber;
-  },[partList])
   
   useEffect(() => {
     GetCaptcha(setCaptcha);
@@ -42,22 +32,21 @@ function Part() {
     let scd = localStorage.getItem("stateCd");
     let dcd = localStorage.getItem("districtCd");
     let acn = localStorage.getItem("acNumber");
-    console.log(partCode);
-    if(part && part?.partNumber){
+    if(curPartList && curPartList?.partNumber){
         let downBody = {
             "stateCd": scd,
             "districtCd": dcd,
             "acNumber": acn,
-            "partNumber": part.partNumber,
+            "partNumber": curPartList.partNumber,
             "captcha": data,
             "captchaId": captcha.id,
             "langCd": "ENG"
         }
-        console.log(downBody)
-        let download = PdfDownload(stateName,districtName,acName,partName,downBody)
+        //TODO: 3 Retry if PdfDownload Fails
+        let download = PdfDownload(stateName,districtName,acName,curPartList.partName,downBody)   
         
+        //TODO: Save all parameters in JSON file with error reason returned from API after 3 tries 
     }
-
     // window.location.reload();
   }
 
@@ -69,7 +58,7 @@ function Part() {
         {stateName && <span>{stateName}</span>}
         {districtName && <span>{districtName}</span>}
         {acName && <span>{acName}</span>}
-        {partName && <span>{partName}</span>}
+        {curPartList.partName && <span>{curPartList.partName}</span>}
         <hr/>
         {captcha ? <img src={`data:image/png;base64,${captcha.captcha}`}/>: ''}
         <hr/>

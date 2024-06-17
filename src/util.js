@@ -27,10 +27,13 @@ export const  GetAc = (scd,dcd,setState) => {
 
 }
 
-export const  GetPart = (scd,dcd,acn,setState) => {
+export const  GetPart = (scd,dcd,acn,setState,setCurPart,index) => {
     axios.get(`http://localhost:9000/partlist/${scd}/${dcd}/${acn}`).then((res)=>{
         console.log(res.data);
-        setState(res.data.data)  
+        setState(res.data.data.payload);
+        let partListJ = res.data.data.payload
+        let part = partListJ && Object.entries(partListJ)[index][1]
+        setCurPart(part) 
         localStorage.setItem("partList",JSON.stringify(res.data.data.payload))
     })
 }
