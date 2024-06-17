@@ -24,14 +24,15 @@ function Part() {
   
   useEffect(() => {
     GetPart(state,district,acNum,setPartList);
+  }, []);
 
+  useEffect(()=>{
     let partListJ = JSON.parse(localStorage.getItem("partList"))
     part = partListJ && Object.entries(partListJ)[curIndex][1]//partList.filter((ele, i)=>{i==curIndex});
     console.log(part)
     partName = part.partName;
     partCode = part.partNumber;
-
-  }, []);
+  },[partList])
   
   useEffect(() => {
     GetCaptcha(setCaptcha);
