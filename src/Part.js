@@ -14,6 +14,7 @@ function Part() {
   let state = window.location.pathname.split("/")[1];
   let district = window.location.pathname.split("/")[2];
   let acNum = window.location.pathname.split("/")[3];
+  
   let stateName= (JSON.parse(localStorage.getItem("states"))?.filter((e) => {return e.stateCd == state}))[0]?.stateName
   let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.asmblyName
   let acName =(JSON.parse(localStorage.getItem("constituencies"))?.filter((e) => {return e.asmblyNo == acNum}))[0]?.asmblyName

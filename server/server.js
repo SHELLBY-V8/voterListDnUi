@@ -23,7 +23,7 @@ app.get('/states', async (req, res, next)=> {
 });
 
 app.get( '/district/:stateCode', async (req, res, next)=> {
-  let district = await axios.get(`https://gateway-voters.eci.gov.in/api/v1/common/constituencies?stateCode=${req.params.stateCode}`)
+  let district = await axios.get(`https://gateway-voters.eci.gov.in/api/v1/common/districts/${req.params.stateCode}`)
   res.json({data: district.data, error: null});
 });
 
@@ -43,23 +43,26 @@ app.get( '/partlist/:stateCode/:districtCode/:acNumber', async (req, res, next)=
 });
 
 app.post('/downloadPdf/:state_name/:district_name/:ac_name/:part_name', async (req, res, next)=> {
-  let file = await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body)
+  await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body).then((res)=>{
+    console.log(res.data.file);
 
-  let pdfContent = file.data.content;
+    if(res.data.statusCode === 200)
+      res.json({data: "Successfully Downloaded", error: null});
+    else
+      res.json({data: "Error Downloading", error: null});
 
-  //TODO: savePDF Content Function
-    // savePDF will have logic to convert base64 String to PDF file & save in file.
-    // filePath = "${your_path}/PDFs/"+str(req.params.state_name)+"/"+str(req.params.district_name)+"/"+str(req.params.ac_name)+"/"
-    // fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
-    // save file in Google Drive (Create Folder Permission Required) or Local Storage
+
+  }).catch((error)=>{
+    console.log(error)
+  })
+    //TODO: savePDF Content Function
+      // savePDF will have logic to convert base64 String to PDF file & save in file.
+      // filePath = "${your_path}/PDFs/"+str(req.params.state_name)+"/"+str(req.params.district_name)+"/"+str(req.params.ac_name)+"/"
+      // fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
+      // save file in Google Drive (Create Folder Permission Required) or Local Storage
   
 
-  //TODO: Return Error if API Fails or File Save fails
-  if(file.status === 200)
-    res.json({data: "Successfully Downloaded", error: null});
-  else
-    res.json({data: "Error Downloading", error: null});
-
+    //TODO: Return Error if API Fails or File Save fails
 })
 
 app.get('/getcaptcha', async (req, res, next)=> {

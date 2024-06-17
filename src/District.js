@@ -22,7 +22,7 @@ function District() {
         <p>
           <select onChange={(e)=>{localStorage.setItem("districtCd", e.target.value);  window.location.assign(`http://localhost:3000/${state}/${e.target.value}`)}}>
             {district.length > 1 && district?.map(ele=>{
-              return <option value={ele.districtCd}>{ele.asmblyName}</option>
+              return <option value={ele.districtCd}>{ele.districtValue}</option>
             })}
           </select>
         </p>

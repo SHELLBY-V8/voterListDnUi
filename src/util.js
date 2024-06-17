@@ -11,7 +11,7 @@ export const GetStates = (setState) => {
 
 export const GetDistrict = (scd,setState) => {
     axios.get(`http://localhost:9000/district/${scd}`).then((res)=>{
-        // console.log(res);
+        console.log(res.data.data);
         setState(res.data.data)  
         localStorage.setItem("district",JSON.stringify(res.data.data))
     })
