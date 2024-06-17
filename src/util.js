@@ -27,21 +27,22 @@ export const  GetAc = (scd,dcd,setState) => {
 
 }
 
-export const  GetPart = (scd,dcd,acn,setState,setCurPart,index) => {
+export const  GetPart = (scd,dcd,acn,setState,setCurPart) => {
+    let curIndex = localStorage.getItem("index");
     axios.get(`http://localhost:9000/partlist/${scd}/${dcd}/${acn}`).then((res)=>{
-        console.log(res.data);
         setState(res.data.data.payload);
         let partListJ = res.data.data.payload
-        let part = partListJ && Object.entries(partListJ)[index][1]
+        let part = partListJ && Object.entries(partListJ)[parseInt(curIndex)][1]
         setCurPart(part) 
         localStorage.setItem("partList",JSON.stringify(res.data.data.payload))
     })
 }
 
-export const PdfDownload = (stateName,districtName,acName,partName,body) => {
-    axios.post(`http://localhost:9000/downloadPdf/${stateName}/${districtName}/${acName}/${partName}`, body).then((res)=>{
-        console.log(res.data)
+export const PdfDownload = async (stateName,districtName,acName,partName,body) => {
+    let response = await axios.post(`http://localhost:9000/downloadPdf/${stateName}/${districtName}/${acName}/${partName}`, body).then((res)=>{
+        return res.data
     })
+    return response
 }
 
 export const GetCaptcha = (setCaptcha) => {

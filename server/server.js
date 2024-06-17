@@ -15,7 +15,44 @@ const corsOptions = {
   "optionsSuccessStatus": 204
 };
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+
+async function uploadFile() {
+  const auth = await authenticate({
+      keyfilePath: path.join(__dirname, 'credentials.json'),
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
+  });
+
+  const drive = google.drive({ version: 'v3', auth });
+
+  const fileMetadata = {
+      name: 'file.pdf',
+  };
+
+  const media = {
+      mimeType: 'application/pdf',
+      body: fs.createReadStream(filePath),
+  };
+
+  try {
+      const file = await drive.files.create({
+          resource: fileMetadata,
+          media: media,
+          fields: 'id',
+      });
+      console.log('File Id: ', file.data.id);
+  } catch (error) {
+      console.error('Error uploading file:', error);
+  }
+}
+
+
+function savePdf(data,location){
+  const buffer = Buffer.from(data, 'base64');
+  fs.writeFileSync(location, buffer);
+      
+  //TODO: save file in Google Drive (Create Folder Permission Required) or Local Storage
+}
 
 app.get('/states', async (req, res, next)=> {
   let state = await axios.get("https://gateway-voters.eci.gov.in/api/v1/common/states/")
@@ -43,26 +80,30 @@ app.get( '/partlist/:stateCode/:districtCode/:acNumber', async (req, res, next)=
 });
 
 app.post('/downloadPdf/:state_name/:district_name/:ac_name/:part_name', async (req, res, next)=> {
-  await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body).then((res)=>{
-    console.log(res.data.file);
+  console.log("DOWNLOAD STARTED -- "+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"+req.params.part_name)
+  await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body).then((res1)=>{
+    if(res1.data.statusCode === 200){
+      filePath = "D:/WORKSPACE/DEB_WORKSPACE/Miscellaneous/PDFs/"+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"
 
-    if(res.data.statusCode === 200)
-      res.json({data: "Successfully Downloaded", error: null});
-    else
-      res.json({data: "Error Downloading", error: null});
+      if (!fs.existsSync(filePath)){
+        fs.mkdirSync(filePath, { recursive: true });
+      }
 
-
+      fileName = `${req.body.partNumber}_${req.params.part_name}.pdf`
+      savePdf(res1.data.file,(filePath+fileName));
+      res.json({success: true, data: "Successfully Downloaded", error: null});
+      console.log("DOWNLOAD COMPLETED -- "+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"+req.params.part_name)
+    }
+    else {
+      res.statusCode = 401;
+      res.json({success: false, data: "Error Downloading", error: null});
+      console.log("DOWNLOAD FAILED -- "+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"+req.params.part_name)
+    }
   }).catch((error)=>{
-    console.log(error)
+    res.statusCode = 201;
+    res.json({success: false, data: error.response.data.message, error: error.message});
+    console.log("DOWNLOAD FAILED -- "+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"+req.params.part_name)
   })
-    //TODO: savePDF Content Function
-      // savePDF will have logic to convert base64 String to PDF file & save in file.
-      // filePath = "${your_path}/PDFs/"+str(req.params.state_name)+"/"+str(req.params.district_name)+"/"+str(req.params.ac_name)+"/"
-      // fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
-      // save file in Google Drive (Create Folder Permission Required) or Local Storage
-  
-
-    //TODO: Return Error if API Fails or File Save fails
 })
 
 app.get('/getcaptcha', async (req, res, next)=> {

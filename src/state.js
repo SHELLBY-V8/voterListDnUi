@@ -24,7 +24,8 @@ function State() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          <select onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://localhost:3000/${e.target.value}`)}}>
+          <select value="" onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://localhost:3000/${e.target.value}`)}}>
+            <option>CHOOSE STATE</option>
             {state.length > 1 && state?.map(ele=>{
               return <option value={ele.stateCd}>{ele.stateName}</option>
             })}

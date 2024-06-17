@@ -11,7 +11,7 @@ function Ac() {
   
   let state = window.location.pathname.split("/")[1];
   let district = window.location.pathname.split("/")[2];
-  let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.asmblyName
+  let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.districtValue
   let stateName= (JSON.parse(localStorage.getItem("states"))?.filter((e) => {return e.stateCd == state}))[0]?.stateName
 
   useEffect(() => {
@@ -28,6 +28,8 @@ function Ac() {
         <p>DISTRICT: {districtName}</p>
         <p>
           <select onChange={(e)=>{localStorage.setItem("index", 0); localStorage.setItem("acNumber", e.target.value); window.location.assign(`http://localhost:3000/${state}/${district}/${e.target.value}`)}}>
+          <option>CHOOSE ASSEMBLY</option>
+
             {ac.length > 1 && ac?.map(ele=>{
               return <option value={ele.asmblyNo}>{ele.asmblyName}</option>
             })}
