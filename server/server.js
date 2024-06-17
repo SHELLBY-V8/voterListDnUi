@@ -2,6 +2,7 @@ var express = require('express')
 var cors = require('cors');
 const { default: axios } = require('axios');
 var bodyParser = require('body-parser');
+var fs = require('fs'); 
 
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,7 +29,6 @@ app.get( '/district/:stateCode', async (req, res, next)=> {
 
 app.get( '/constituencies/:stateCode/:districtCode', async (req, res, next)=> {
   let constituencies = await axios.get(`https://gateway-voters.eci.gov.in/api/v1/common/acs/${req.params.districtCode}`)
-  console.log(`${req.params.stateCode}${req.params.districtCode}`);
   res.json({data: constituencies.data, error: null});
 });
 
@@ -46,11 +46,19 @@ app.post('/downloadPdf/:state_name/:district_name/:ac_name/:part_name', async (r
   console.log(req.body);
   let file = await axios.post('https://gateway-voters.eci.gov.in/api/v1/printing-publish/generate-published-eroll',req.body)
   
-  let pdfFile = Base64.atob(file.data.content)
-
-  let path = "D:/WORKSPACE/DEB_WORKSPACE/Miscellaneous/PDFs/"+str(req.params.state_name)+"/"+str(req.params.district_name)+"/"+str(req.params.ac_name)+"/"
+  console.log(file.data);
+  // let pdfFile = atob(file.data.content)
+  console.log(req.params.state_name);
+  let path = "D:/WORKSPACE/DEB_WORKSPACE/Miscellaneous/PDFs/"+req.params.state_name+"/"+req.params.district_name+"/"+req.params.ac_name+"/"
   let fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
-  store(pdfFile,path,fileName)
+  // store(pdfFile,path,fileName)
+  fs.writeFileSync(path+fileName,file.data.content,'base64');
+
+  if(file.status === 200){
+    res.json({data: "Successfully Downloaded", error: null});
+  } else {
+    res.json({data: "Error Downloading", error: null});
+  }
 
 })
 
@@ -58,8 +66,6 @@ app.get('/getcaptcha', async (req, res, next)=> {
   let captcha = axios.get('https://gateway-voters.eci.gov.in/api/v1/captcha-service/generateCaptcha/EROLL')
   res.json({data: (await captcha).data, error: null})
 })
-
-app.get('/download/:stateCode/:districtCode/:acNumber/:partNumber')
 
 app.listen(9000, function () {
   console.log('CORS-enabled web server listening on port 80')

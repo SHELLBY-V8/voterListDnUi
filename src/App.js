@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import State from "./state";
 import District from "./District";
 import Ac from "./Ac";
+import Part from "./Part";
 
 export default function App() {
   let state = window.location.pathname.split("/")[1];
@@ -13,7 +14,8 @@ export default function App() {
       <Routes>
           <Route path="/" element={<State />} />
           <Route path={`/${state}`} element={<District />} />
-          <Route path={`/${state}/${state}`} element={<Ac />} />
+          <Route path={`/${state}/${district}`} element={<Ac />} />
+          <Route path={`/${state}/${district}/${ac}`} element={<Part />} />
       </Routes>
     </BrowserRouter>
   );
