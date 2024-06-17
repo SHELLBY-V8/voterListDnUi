@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { GetAc, GetCaptcha, GetDistrict, GetPart, GetStates, PdfDownload } from './util';
+import { GetCaptcha, GetPart, PdfDownload } from './util';
 
 function Part() {
 
@@ -17,12 +17,12 @@ function Part() {
   let stateName= (JSON.parse(localStorage.getItem("states"))?.filter((e) => {return e.stateCd == state}))[0]?.stateName
   let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.asmblyName
   let acName =(JSON.parse(localStorage.getItem("constituencies"))?.filter((e) => {return e.asmblyNo == acNum}))[0]?.asmblyName
-  let curIndex = localStorage.getItem("index");
   
   
   useEffect(() => {
+    let curIndex = localStorage.getItem("index");
     GetPart(state,district,acNum,setPartList,setCurPartList, curIndex);
-  }, []);
+  }, [refesh]);
   
   useEffect(() => {
     GetCaptcha(setCaptcha);
@@ -42,12 +42,19 @@ function Part() {
             "captchaId": captcha.id,
             "langCd": "ENG"
         }
-        //TODO: 3 Retry if PdfDownload Fails
+        
         let download = PdfDownload(stateName,districtName,acName,curPartList.partName,downBody)   
+        //TODO: 3 Retry if PdfDownload Fails
+            //Refesh Captcha on fail
         
         //TODO: Save all parameters in JSON file with error reason returned from API after 3 tries 
+            //increment local storage index by 1
+            //Refresh the Captcha by toggling "refresh" state
+
+        //TODO: Incase of Success
+            //increment local storage index by 1
+            //toggle "refresh" state 
     }
-    // window.location.reload();
   }
 
   return (

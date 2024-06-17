@@ -48,6 +48,11 @@ app.post('/downloadPdf/:state_name/:district_name/:ac_name/:part_name', async (r
   let pdfContent = file.data.content;
 
   //TODO: savePDF Content Function
+    // savePDF will have logic to convert base64 String to PDF file & save in file.
+    // filePath = "${your_path}/PDFs/"+str(req.params.state_name)+"/"+str(req.params.district_name)+"/"+str(req.params.ac_name)+"/"
+    // fileName = `${req.body.part_number}_${req.params.part_name}.pdf`
+    // save file in Google Drive (Create Folder Permission Required) or Local Storage
+  
 
   //TODO: Return Error if API Fails or File Save fails
   if(file.status === 200)
