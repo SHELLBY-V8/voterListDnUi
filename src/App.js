@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import State from "./state";
+import District from "./District";
+import Ac from "./Ac";
 
-function App() {
+export default function App() {
+  let state = window.location.pathname.split("/")[1];
+  let district = window.location.pathname.split("/")[2];
+  let ac = window.location.pathname.split("/")[3];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+          <Route path="/" element={<State />} />
+          <Route path={`/${state}`} element={<District />} />
+          <Route path={`/${state}/${state}`} element={<Ac />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
