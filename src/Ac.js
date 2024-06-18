@@ -23,11 +23,11 @@ function Ac() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>STATE: {stateName}</p>
-        <p>DISTRICT: {districtName}</p>
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <p style={{fontSize:"18px"}}>STATE: {stateName}</p>
+        <p style={{fontSize:"18px"}}>DISTRICT: {districtName}</p>
         <p>
-          <select onChange={(e)=>{localStorage.setItem("index", 0); localStorage.setItem("acNumber", e.target.value); window.location.assign(`http://localhost:3000/${state}/${district}/${e.target.value}`)}}>
+          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("index", 0); localStorage.setItem("acNumber", e.target.value); window.location.assign(`http://localhost:3000/${state}/${district}/${e.target.value}`)}}>
           <option>CHOOSE ASSEMBLY</option>
 
             {ac.length > 1 && ac?.map(ele=>{

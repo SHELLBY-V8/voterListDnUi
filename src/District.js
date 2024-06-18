@@ -17,10 +17,10 @@ function District() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>STATE: {stateName}</p>
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <p style={{fontSize:"18px"}}>STATE: {stateName}</p>
         <p>
-          <select onChange={(e)=>{localStorage.setItem("districtCd", e.target.value);  window.location.assign(`http://localhost:3000/${state}/${e.target.value}`)}}>
+          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("districtCd", e.target.value);  window.location.assign(`http://localhost:3000/${state}/${e.target.value}`)}}>
           <option>CHOOSE DISTRICT</option>
 
             {district.length > 1 && district?.map(ele=>{

@@ -11,6 +11,7 @@ export default function App() {
   let ac = window.location.pathname.split("/")[3];
   return (
     <BrowserRouter>
+    <h1 style={{textAlign:"center"}}>DOWNLOAD VOTER LIST</h1>
       <Routes>
           <Route path="/" element={<State />} />
           <Route path={`/${state}`} element={<District />} />

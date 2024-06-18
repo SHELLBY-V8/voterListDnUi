@@ -74,22 +74,25 @@ function Part() {
     <div className="App">
       <header className="App-header">
         <span>{error}</span>
+        <div className='mb-5'>
+
         RETRY COUNT:  <span>{3-i}</span>
-        <p>State: {stateName && <span>{stateName}</span>}</p>
-        <p>District: {districtName && <span>{districtName}</span>}</p>
-        <p>AC Name: {acName && <span>{acName}</span>}</p>
-        <p>Part Name: {curPartList.partName && <span>{curPartList.partNumber} {curPartList.partName}</span>}</p>
+        </div>
+        <p  style={{fontSize:"18px"}}>State: {stateName && <span>{stateName}</span>}</p>
+        <p style={{fontSize:"18px"}}>District: {districtName && <span>{districtName}</span>}</p>
+        <p style={{fontSize:"18px"}}>AC Name: {acName && <span>{acName}</span>}</p>
+        <p style={{fontSize:"18px"}}>Part Name: {curPartList.partName && <span>{curPartList.partNumber} {curPartList.partName}</span>}</p>
         <hr/>
         {captcha ? <img src={`data:image/png;base64,${captcha.captcha}`}/>: ''}
         <hr/>
-        <input type="text" value={data} placeholder="Enter Captcha" onChange={(e)=>{setData(e.target.value)}}></input>
+        <input style={{height:"30px",width:"200px", fontSize:"18px"}} type="text" value={data} placeholder="Enter Captcha" onChange={(e)=>{setData(e.target.value)}}></input>
         <hr/>
-        <button onClick={()=>{DownloadPDF()}}>SUBMIT</button>
-        <button onClick={()=>{setRefresh(!refesh)}}>Refresh</button>
+        <button class="btn btn-primary mb-2" onClick={()=>{DownloadPDF()}}>SUBMIT</button>
+        <button class="btn btn-primary" onClick={()=>{setRefresh(!refesh)}}>Refresh</button>
 
       <hr/>
-      <input type="text" value={skip} placeholder="Enter Skip Number" onChange={(e)=>{setSkip(e.target.value)}}></input>
-      <button onClick={()=>{localStorage.setItem("index",(skip-1<0? 0:skip-1)); setRefresh(!refesh); setSkip("")}}>Jump</button>
+      <input style={{height:"30px",width:"200px", fontSize:"18px"}} type="text" value={skip} placeholder="Enter Skip Number" onChange={(e)=>{setSkip(e.target.value)}}></input>
+      <button  class="btn btn-primary mt-2"  onClick={()=>{localStorage.setItem("index",(skip-1<0? 0:skip-1)); setRefresh(!refesh); setSkip("")}}>Jump</button>
 
       </header>
     </div>
