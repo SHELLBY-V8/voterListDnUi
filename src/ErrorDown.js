@@ -1,30 +1,28 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { GetCaptcha, GetPart, PdfDownload, logError } from './util';
+import { GetCaptcha, GetErrorData, GetPart, PdfDownload, logError } from './util';
 
-function Part() {
+function ErrorDown() {
 
-  let [partList, setPartList] = useState({});
   let [curPartList, setCurPartList] = useState({});
   let [captcha, setCaptcha] = useState({});
   let [refesh, setRefresh] = useState(true);
   let [data, setData] = useState("")
   let [skip, setSkip] = useState("")
   let [error, setError] = useState("")
+  let [errorList, setErrorList] = useState("")
   let [i, setI] = useState(0)
   
-  let state = window.location.pathname.split("/")[2];
-  let district = window.location.pathname.split("/")[3];
-  let acNum = window.location.pathname.split("/")[4];
+  let err= window.location.pathname.split("/")[2];
 
-  let stateName= (JSON.parse(localStorage.getItem("states"))?.filter((e) => {return e.stateCd == state}))[0]?.stateName
-  let districtName =(JSON.parse(localStorage.getItem("district"))?.filter((e) => {return e.districtCd == district}))[0]?.districtValue
-  let acName =(JSON.parse(localStorage.getItem("constituencies"))?.filter((e) => {return e.asmblyNo == acNum}))[0]?.asmblyName
+  let stateName="";
+  let districtName = "";
+  let acName = "";
   
   
   useEffect(() => {
-    GetPart(state,district,acNum,setPartList,setCurPartList);
+    GetErrorData(err,setErrorList,setCurPartList);
   }, [refesh]);
   
   useEffect(() => {
@@ -35,16 +33,13 @@ function Part() {
     let scd = localStorage.getItem("stateCd");
     let dcd = localStorage.getItem("districtCd");
     let acn = localStorage.getItem("acNumber");
-    if(curPartList && curPartList?.partNumber){
-        let downBody = {
-            "stateCd": scd,
-            "districtCd": dcd,
-            "acNumber": acn,
-            "partNumber": curPartList.partNumber,
-            "captcha": data,
-            "captchaId": captcha.id,
-            "langCd": "ENG"
-        }
+    if(curPartList && curPartList?.parameter){
+        let downBody = curPartList.parameter
+        downBody.captcha = data;
+        downBody.captchaId = captcha.id
+        stateName = curPartList.stateName
+        districtName = curPartList.districtName
+        acName = curPartList.acName
 
         let curIndex = parseInt(localStorage.getItem("index"));
         let download = await PdfDownload(stateName,districtName,acName,curPartList.partName,downBody);
@@ -60,14 +55,14 @@ function Part() {
             logError(parameters);
             //TODO: LOG ERROR WITH ALL PARAMS
             // Define the path for the JSON file
-            if(curIndex+1 < partList.length )
+            if(curIndex+1 < errorList.length )
                 localStorage.setItem("index",(curIndex+1).toString());
             setRefresh(!refesh);
             setError("");
             setData("");
             setI(0);
         } else if (download.success) {
-            if(curIndex+1 < partList.length )
+            if(curIndex+1 < errorList.length )
                 localStorage.setItem("index",(curIndex+1).toString());
             setRefresh(!refesh);
             setError("");
@@ -96,10 +91,10 @@ function Part() {
         
         <div>
             <table>
-                <tr><td>State Name</td><td>{stateName && <span>{stateName}</span>}</td></tr>
-                <tr><td>District Name</td><td>{districtName && <span>{districtName}</span>}</td></tr>
-                <tr><td>AsC Name</td><td>{acName && <span>{acName}</span>}</td></tr>
-                <tr><td>Part Number</td><td>{curPartList && <span>{curPartList.partNumber}</span>}</td></tr>
+                <tr><td>State Name</td><td>{curPartList && <span>{curPartList.stateName}</span>}</td></tr>
+                <tr><td>District Name</td><td>{curPartList && <span>{curPartList.districtName}</span>}</td></tr>
+                <tr><td>AsC Name</td><td>{curPartList && <span>{curPartList.acName}</span>}</td></tr>
+                <tr><td>Part Number</td><td>{curPartList && <span>{curPartList?.parameter?.partNumber}</span>}</td></tr>
                 <tr><td>Part Name</td><td>{curPartList && <span>{curPartList.partName}</span>}</td></tr>
             </table>
         </div>
@@ -131,4 +126,4 @@ function Part() {
   );
 }
 
-export default Part;
+export default ErrorDown;

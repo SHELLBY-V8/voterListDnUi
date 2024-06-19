@@ -55,3 +55,27 @@ export const GetCaptcha = (setCaptcha) => {
 export const logError = (parameters) => {
     axios.post('http://localhost:9000/logerror',parameters);
 }
+
+export const GetErr = (setState) => {
+    axios.get('http://localhost:9000/allerror').then((res)=>{
+        let data = res.data.data
+        let master = []
+        data.forEach(ele=>{
+            console.log(ele);
+            let temp = { name: ele, value: ele}
+            master.push(temp)
+        })
+        setState(master);
+    });
+}
+
+export const GetErrorData = (err,setError,setCur) =>{
+    let curIndex = localStorage.getItem("index");
+    axios.post('http://localhost:9000/errordata',{file: err}).then((res)=>{
+        let data = res.data.data;
+        setError(data)
+        let part = data && Object.entries(data)[parseInt(curIndex)][1]
+        setCur(part)
+        localStorage.setItem('error',res.data.data)
+    })
+}

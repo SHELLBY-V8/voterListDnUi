@@ -110,7 +110,7 @@ app.post('/logerror', (req, res) => {
   const errorDetails = req.body;
   const logDate = new Date()
   const logFilePath = __dirname + `/ERRs/`;
-  const fileName = `_${logDate.toDateString()}error-logs.json`
+  const fileName = `_${(logDate.toDateString()).replace(/\s/g,'')}error-logs.json`
 
   if (!fs.existsSync(logFilePath)) {
     fs.mkdirSync(logFilePath, { recursive: true });
@@ -135,6 +135,36 @@ app.post('/logerror', (req, res) => {
     });
   });
 });
+
+app.get('/allerror', async (req, res, next) => {
+
+  let master = {}
+  const directoryPath = __dirname + '/ERRs/';
+  //passsing directoryPath and callback function
+  fs.readdir(directoryPath, function (err, files) {
+      //handling error
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      //listing all files using forEach
+      res.json({ data: files, error: null })
+
+  });
+
+})
+
+app.post('/errordata', async (req, res, next) => {
+  let fileName = req.body.file;
+  let master;
+  const directoryPath = __dirname + '/ERRs/';
+  //passsing directoryPath and callback function
+  fs.readFile(directoryPath+fileName,'utf8', (err, data) => {
+    if (err) throw err;
+    res.json({ data: JSON.parse(data), error: null })
+
+  });
+
+})
 
 app.get('/getcaptcha', async (req, res, next) => {
   let captcha = axios.get('https://gateway-voters.eci.gov.in/api/v1/captcha-service/generateCaptcha/EROLL')
