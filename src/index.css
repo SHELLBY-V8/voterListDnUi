@@ -14,4 +14,18 @@ code {
 
 p{
   font-size: 1rem;
+  line-height: 20%;
+}
+
+table, th, td {
+  border: 1px solid;
+  font-size: medium;
+}
+td{
+  text-align: left;
+}
+
+.error{
+  font-weight: bold;
+  color: red;
 }

@@ -73,24 +73,47 @@ function Part() {
   return (
     <div className="App">
       <header className="App-header">
-        <span>{error}</span>
-        RETRY COUNT:  <span>{3-i}</span>
-        <p>State: {stateName && <span>{stateName}</span>}</p>
-        <p>District: {districtName && <span>{districtName}</span>}</p>
-        <p>AC Name: {acName && <span>{acName}</span>}</p>
-        <p>Part Name: {curPartList.partName && <span>{curPartList.partNumber} {curPartList.partName}</span>}</p>
-        <hr/>
+        <div>
+            <div className='error'>
+                {error}
+            </div>
+            <div>
+                <p>RETRY COUNT: {3-i}</p>
+            </div>
+        </div>
+        
+        <div>
+            <table>
+                <tr><td>State Name</td><td>{stateName && <span>{stateName}</span>}</td></tr>
+                <tr><td>District Name</td><td>{districtName && <span>{districtName}</span>}</td></tr>
+                <tr><td>AsC Name</td><td>{acName && <span>{acName}</span>}</td></tr>
+                <tr><td>Part Number</td><td>{curPartList && <span>{curPartList.partNumber}</span>}</td></tr>
+                <tr><td>Part Name</td><td>{curPartList && <span>{curPartList.partName}</span>}</td></tr>
+            </table>
+        </div>
+        <hr></hr>
         {captcha ? <img src={`data:image/png;base64,${captcha.captcha}`}/>: ''}
-        <hr/>
-        <input type="text" value={data} placeholder="Enter Captcha" onChange={(e)=>{setData(e.target.value)}}></input>
-        <hr/>
-        <button onClick={()=>{DownloadPDF()}}>SUBMIT</button>
-        <button onClick={()=>{setRefresh(!refesh)}}>Refresh</button>
-
-      <hr/>
-      <input type="text" value={skip} placeholder="Enter Skip Number" onChange={(e)=>{setSkip(e.target.value)}}></input>
-      <button onClick={()=>{localStorage.setItem("index",(skip-1<0? 0:skip-1)); setRefresh(!refesh); setSkip("")}}>Jump</button>
-
+        <hr></hr>
+        <div>
+            <div className='row'>
+                <input className="input-group-text" type="text" value={data} placeholder="Enter Captcha" onChange={(e)=>{setData(e.target.value)}}></input>
+            </div>
+            <div className='row'>
+                <div className='col-md'>
+                    <button className="btn btn-success" onClick={()=>{DownloadPDF()}}>SUBMIT</button>
+                </div>
+                <div className='col-md'>
+                    <button className="btn btn-outline-warning" onClick={()=>{setRefresh(!refesh)}}>Refresh</button>
+                </div>
+            </div>
+        </div>
+        <hr></hr>
+        <button className="btn btn-info" onClick={()=>{localStorage.setItem("index",(parseInt(localStorage.getItem("index"))+1)); setRefresh(!refesh); setSkip("")}}>SKIP</button>
+        <hr></hr>
+        <div>
+            <input className="input-group-text" type="text" value={skip} placeholder="Enter Skip Number" onChange={(e)=>{setSkip(e.target.value)}}></input>
+            <button className="btn btn-info" onClick={()=>{localStorage.setItem("index",(skip-1<0? 0:skip-1)); setRefresh(!refesh); setSkip("")}}>Jump</button>
+        </div>
       </header>
     </div>
   );
