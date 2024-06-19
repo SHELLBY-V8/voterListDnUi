@@ -22,14 +22,16 @@ function State() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <p>
-          <select value="" onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://localhost:3000/${e.target.value}`)}}>
+
+          <select class="form-select" aria-label="Default select example" value="" onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://localhost:3000/${e.target.value}`)}}>
             <option>CHOOSE STATE</option>
             {state.length > 1 && state?.map(ele=>{
               return <option value={ele.stateCd}>{ele.stateName}</option>
             })}
           </select>
+        
         </p>
       </header>
     </div>
