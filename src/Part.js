@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { GetCaptcha, GetPart, PdfDownload } from './util';
+import { GetCaptcha, GetPart, PdfDownload, logError } from './util';
 
 function Part() {
 
@@ -49,7 +49,17 @@ function Part() {
         let curIndex = parseInt(localStorage.getItem("index"));
         let download = await PdfDownload(stateName,districtName,acName,curPartList.partName,downBody);
         if(i>=2 && !download.success){
+            let parameters = {
+                parameter: downBody,
+                stateName,
+                districtName,
+                acName,
+                partName: curPartList.partName
+            }
+
+            logError(parameters);
             //TODO: LOG ERROR WITH ALL PARAMS
+            // Define the path for the JSON file
             localStorage.setItem("index",(curIndex+1).toString());
             setRefresh(!refesh);
             setError("");

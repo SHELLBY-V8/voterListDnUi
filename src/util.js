@@ -51,3 +51,7 @@ export const GetCaptcha = (setCaptcha) => {
         setCaptcha(res.data.data)
     })
 }
+
+export const logError = (parameters) => {
+    axios.post('http://localhost:9000/logerror',parameters);
+}
