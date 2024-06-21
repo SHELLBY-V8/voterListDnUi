@@ -27,7 +27,7 @@ function Ac() {
         <p style={{fontSize:"18px"}}>STATE: {stateName}</p>
         <p style={{fontSize:"18px"}}>DISTRICT: {districtName}</p>
         <p>
-          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("index", 0); localStorage.setItem("acNumber", e.target.value); window.location.assign(`http://localhost:3000/dwn/${state}/${district}/${e.target.value}`)}}>
+          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("index", 0); localStorage.setItem("acNumber", e.target.value); window.location.assign(`http://3.110.159.106:3000/dwn/${state}/${district}/${e.target.value}`)}}>
           <option>CHOOSE ASSEMBLY</option>
 
             {ac.length > 1 && ac?.map(ele=>{

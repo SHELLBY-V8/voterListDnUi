@@ -21,7 +21,7 @@ function District() {
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <p style={{fontSize:"18px"}}>STATE: {stateName}</p>
         <p>
-          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("districtCd", e.target.value);  window.location.assign(`http://localhost:3000/dwn/${state}/${e.target.value}`)}}>
+          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{localStorage.setItem("districtCd", e.target.value);  window.location.assign(`http://3.110.159.106:3000/dwn/${state}/${e.target.value}`)}}>
           <option>CHOOSE DISTRICT</option>
 
             {district.length > 1 && district?.map(ele=>{

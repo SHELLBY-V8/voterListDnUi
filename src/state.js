@@ -25,7 +25,7 @@ function State() {
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <p>
 
-          <select class="form-select" aria-label="Default select example" value="" onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://localhost:3000/dwn/${e.target.value}`)}}>
+          <select class="form-select" aria-label="Default select example" value="" onChange={(e)=>{ console.log(e.target.value); localStorage.setItem("stateCd", e.target.value); localStorage.setItem("langCd", "ENG"); window.location.assign(`http://3.110.159.106:3000/dwn/${e.target.value}`)}}>
             <option>CHOOSE STATE</option>
             {state.length > 1 && state?.map(ele=>{
               return <option value={ele.stateCd}>{ele.stateName}</option>

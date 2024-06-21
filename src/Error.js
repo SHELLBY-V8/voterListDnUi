@@ -16,7 +16,7 @@ function Error() {
     <div className="App">
       <header className="App-header">
         <p>
-          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{window.location.assign(`http://localhost:3000/error/${e.target.value}`)}}>
+          <select  class="form-select" aria-label="Default select example" onChange={(e)=>{window.location.assign(`http://3.110.159.106:3000/error/${e.target.value}`)}}>
           <option>CHOOSE ERROR LOG</option>
 
             {errorList.length > 0 && errorList?.map(ele=>{
